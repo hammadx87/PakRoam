@@ -1,0 +1,73 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ── PakRoam Blue & Clean White palette ───────────────── */
+    --background: 0 0% 100%; /* #FFFFFF */
+    --foreground: 222 47% 11%; /* #0F172A dark slate */
+
+    --card: 0 0% 100%;
+    --card-foreground: 222 47% 11%;
+
+    --muted: 210 40% 96.1%; /* #F8FAFC slate tint */
+    --muted-foreground: 215 16% 41%;
+
+    --secondary: 210 40% 96.1%; /* soft slate */
+    --secondary-foreground: 222 47% 11%;
+
+    /* Vibrant Blue */
+    --primary: 221 83% 53%; /* #2563EB */
+    --primary-foreground: 0 0% 100%;
+
+    /* Electric Sky Blue */
+    --accent: 199 89% 48%; /* #0EA5E9 */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.75rem;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-brand-600 text-white;
+  }
+}
+
+@layer components {
+  .section-y {
+    @apply py-16 md:py-24;
+  }
+
+  .hero-grid {
+    background-image:
+      linear-gradient(to right, rgb(37 99 235 / 0.06) 1px, transparent 1px),
+      linear-gradient(to bottom, rgb(37 99 235 / 0.06) 1px, transparent 1px);
+    background-size: 44px 44px;
+    mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 60%, transparent 100%);
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-brand-600 via-brand-500 to-sky-500 bg-clip-text text-transparent;
+  }
+}
