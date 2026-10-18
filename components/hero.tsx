@@ -127,7 +127,9 @@ export function Hero() {
               </Card>
             </div>
 
-            <div className="absolute -bottom-5 -left-4 rounded-xl border border-border bg-white px-4 py-3 shadow-card">
+            <div
+              className="absolute -bottom-6 -left-3 z-10 rounded-2xl border border-border/70 bg-white/85 px-4 py-3 shadow-xl backdrop-blur-sm sm:-left-6 md:-left-8"
+            >
               <p className="text-xs font-semibold text-foreground">Delivered to WhatsApp</p>
               <p className="text-[11px] text-muted-foreground">QR + activation code, instantly</p>
             </div>

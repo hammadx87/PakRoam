@@ -71,3 +71,47 @@
     @apply bg-gradient-to-r from-brand-600 via-brand-500 to-sky-500 bg-clip-text text-transparent;
   }
 }
+
+/* ── Mobile form ergonomics: iOS Safari auto-zoom ─────────────────────────
+   iOS Safari zooms the viewport when a focused text field renders below
+   16px. This rule is intentionally *unlayered* (Tailwind's output lives in
+   cascade layers, so unlayered styles win over the `text-sm` utility on
+   inputs/selects) and scoped to phone/tablet widths — it also covers iPhone
+   landscape viewports wider than 768px.
+
+   We deliberately do NOT set `maximumScale: 1` on the viewport: that would
+   disable pinch-zoom for every visitor (a WCAG 1.4.4 failure). Fixing the
+   font-size fixes the cause without taking zoom away. */
+@media (max-width: 1023px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Specificity note: production builds flatten Tailwind's cascade layers,
+     so the element-level rule above would lose to utilities like `.text-sm`
+     (class beats element). This `:focus` rule is class-specificity (0,1,1)
+     and therefore wins over `.text-sm` — and iOS decides whether to zoom at
+     exactly this moment, on focus. */
+  input:focus,
+  select:focus,
+  textarea:focus {
+    font-size: 16px;
+  }
+}
+
+/* ── Reduced motion: honour the OS preference across the landing page ── */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

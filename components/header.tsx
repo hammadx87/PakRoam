@@ -42,7 +42,7 @@ export function SiteHeader() {
           </div>
           <Button asChild variant="ghost" size="sm" className="hidden lg:inline-flex">
             <a
-              href={whatsappSupportUrl("Hi PakRoam! I need help choosing an eSIM plan.")}
+              href={whatsappSupportUrl()}
               target="_blank"
               rel="noopener noreferrer"
             >

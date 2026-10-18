@@ -34,7 +34,7 @@ export function CtaBand() {
               className="border-white/40 bg-transparent text-white hover:bg-white/10 hover:text-white"
             >
               <a
-                href={whatsappSupportUrl("Hi PakRoam! I have a question before buying an eSIM.")}
+                href={whatsappSupportUrl()}
                 target="_blank"
                 rel="noopener noreferrer"
               >

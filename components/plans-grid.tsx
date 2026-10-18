@@ -99,7 +99,7 @@ export function PlansGrid() {
           Not sure which plan you need?{" "}
           <a
             className="font-medium text-brand-600 underline-offset-4 hover:underline"
-            href={whatsappSupportUrl("Hi PakRoam! Which eSIM plan should I pick for my trip?")}
+            href={whatsappSupportUrl()}
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -15,7 +15,7 @@ const FOOTER_COLUMNS = [
   {
     title: "Support",
     links: [
-      { href: whatsappSupportUrl("Hi PakRoam! I need support."), label: "WhatsApp Support", external: true },
+      { href: whatsappSupportUrl(), label: "WhatsApp Support", external: true },
       { href: `mailto:${siteConfig.support.email}`, label: siteConfig.support.email, external: true },
     ],
   },
@@ -77,7 +77,7 @@ export function SiteFooter() {
             <ul className="space-y-2.5">
               <li>
                 <a
-                  href={whatsappSupportUrl("Hi PakRoam! I need support.")}
+                  href={whatsappSupportUrl()}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-brand-700"

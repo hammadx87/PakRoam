@@ -32,7 +32,7 @@ All secrets are **server-side only** (no `NEXT_PUBLIC_` prefix) and are read at 
 | `JAZZCASH_*` / `EASYPAISA_*` / `PAYFAST_*` | No | Live payment gateway credentials |
 | `PAYMENTS_ALLOW_MOCK` | No | `true` to allow simulated payments in production builds |
 | `NEXT_PUBLIC_SITE_URL` | No | Canonical site URL for metadata/OG tags |
-| `NEXT_PUBLIC_SUPPORT_WHATSAPP` | No | Support number in international format (e.g. `923001234567`) |
+| `NEXT_PUBLIC_SUPPORT_WHATSAPP` | No | Support number in international format, digits only (defaults to `12569563944`) |
 | `ORDER_SIGNING_SECRET` | No | Dedicated secret for signing order URLs (falls back to `ESIM_ACCESS_SECRET_KEY`) |
 | `WHATSAPP_AGENT_API_KEY` | To use WhatsApp | WhatsApp Agent API key for `/api/whatsapp` (server-side only, stored in `.env.local`) |
 | `WHATSAPP_AGENT_API_URL` | No | Endpoint of the WhatsApp Agent API; unset = simulated sends in dev |
