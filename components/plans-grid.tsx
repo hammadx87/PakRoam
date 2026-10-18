@@ -62,7 +62,7 @@ export function PlansGrid() {
                     {plan.dataLabel}
                   </span>
                   <span className="ml-1.5 text-sm text-muted-foreground">
-                    / {plan.durationDays} days
+                    / {plan.durationDays === 1 ? "1 day" : `${plan.durationDays} days`}
                   </span>
                 </div>
 
