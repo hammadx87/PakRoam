@@ -19,6 +19,21 @@ export interface EsimPlan {
   includes: string[];
 }
 
+/**
+ * Retail pricing policy
+ * ────────────────────
+ * Prices are set at competitive market rates for Pakistan eSIMs
+ * (Airalo / Holafly-style tiers) and carry a ~30% margin over our
+ * white-label wholesale cost, i.e. wholesale ≈ retail ÷ 1.30
+ * (e.g. Starter wholesale ≈ 769 PKR → 999 PKR retail).
+ *
+ * Target retail bands: 1GB ≈ 999–1,150 PKR ($3.50–4) · 3GB ≈ 1,999–2,250 PKR
+ * ($7–8) · 5–20GB ≈ 4,500–8,000 PKR. These are the published prices shown on
+ * plan cards, charged at checkout and embedded in order payloads — the rest
+ * of the app reads them via `plan.price[currency]`.
+ */
+export const PROFIT_MARGIN_MULTIPLIER = 1.3;
+
 export const PLANS: EsimPlan[] = [
   {
     id: "pk-1gb-7d",
@@ -28,7 +43,7 @@ export const PLANS: EsimPlan[] = [
     dataLabel: "1 GB",
     dataAmountMb: 1024,
     durationDays: 7,
-    price: { PKR: 999, USD: 3.49 },
+    price: { PKR: 999, USD: 3.5 },
     network: "Jazz / Zong 4G",
     includes: ["Instant QR delivery", "Hotspot / tethering allowed", "Top-ups available"],
   },
@@ -40,7 +55,7 @@ export const PLANS: EsimPlan[] = [
     dataLabel: "3 GB",
     dataAmountMb: 3072,
     durationDays: 15,
-    price: { PKR: 2499, USD: 8.99 },
+    price: { PKR: 2099, USD: 7.5 },
     network: "Jazz / Zong 4G",
     includes: ["Instant QR delivery", "Hotspot / tethering allowed", "Top-ups available"],
   },
@@ -52,7 +67,7 @@ export const PLANS: EsimPlan[] = [
     dataLabel: "5 GB",
     dataAmountMb: 5120,
     durationDays: 30,
-    price: { PKR: 3999, USD: 13.99 },
+    price: { PKR: 4499, USD: 15.5 },
     network: "Jazz / Zong 4G",
     popular: true,
     includes: ["Instant QR delivery", "Hotspot / tethering allowed", "Top-ups available"],
