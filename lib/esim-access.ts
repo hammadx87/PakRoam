@@ -6,7 +6,13 @@
  * provisions real eSIM profiles against the provider API. When they are absent
  * the app falls back to a simulated (mock) mode in local development only —
  * in production, mock provisioning must be explicitly enabled with
- * `ESIM_ACCESS_ALLOW_MOCK=true`, otherwise order creation fails loudly.
+ * `ESIM_ACCESS_ALLOW_MOCK=true` (or `PAYMENTS_ALLOW_MOCK=true`), otherwise
+ * order creation fails loudly.
+ *
+ * Failures of the LIVE purchase call itself (insufficient provider balance,
+ * unknown package code, sandbox/test credentials, network errors) are caught
+ * and downgraded to a simulated profile whenever mock provisioning is allowed,
+ * so a testing environment never blocks checkout with a provision error.
  */
 
 const DEFAULT_BASE_URL = "https://backend.esimaccess.com/api/v1";
@@ -49,7 +55,10 @@ export function getEsimAccessEnv(): EsimAccessEnv | null {
 export function isMockProvisioningAllowed(): boolean {
   return (
     process.env.NODE_ENV !== "production" ||
-    process.env.ESIM_ACCESS_ALLOW_MOCK === "true"
+    process.env.ESIM_ACCESS_ALLOW_MOCK === "true" ||
+    // Test/staging environments that already accept simulated payments also
+    // get simulated eSIM provisioning when the live provider call fails.
+    process.env.PAYMENTS_ALLOW_MOCK === "true"
   );
 }
 
@@ -60,8 +69,8 @@ export function getEsimAccessMode(): EsimAccessMode {
   if (isMockProvisioningAllowed()) return "mock";
   throw new EsimAccessConfigError(
     "eSIM Access credentials are not configured. Set ESIM_ACCESS_ACCESS_CODE and " +
-      "ESIM_ACCESS_SECRET_KEY, or set ESIM_ACCESS_ALLOW_MOCK=true to explicitly " +
-      "enable simulated provisioning."
+      "ESIM_ACCESS_SECRET_KEY, or set ESIM_ACCESS_ALLOW_MOCK=true / " +
+      "PAYMENTS_ALLOW_MOCK=true to explicitly enable simulated provisioning."
   );
 }
 
@@ -84,12 +93,33 @@ export interface ProvisionedProfile {
   mode: EsimAccessMode;
 }
 
-/** Provision (purchase) an eSIM profile for the given package. */
+/**
+ * Provision (purchase) an eSIM profile for the given package.
+ *
+ * In live mode a failed provider call falls back to a simulated profile when
+ * mock provisioning is allowed (`PAYMENTS_ALLOW_MOCK=true`,
+ * `ESIM_ACCESS_ALLOW_MOCK=true`, or a non-production build), so testing
+ * environments are never blocked by provider-side failures. Without any of
+ * those flags the error propagates and order creation fails loudly.
+ */
 export async function provisionEsim(
   input: ProvisionEsimInput
 ): Promise<ProvisionedProfile> {
   const mode = getEsimAccessMode();
-  return mode === "live" ? provisionLive(input) : provisionMock(input);
+  if (mode === "mock") return provisionMock(input);
+
+  try {
+    return await provisionLive(input);
+  } catch (error) {
+    if (!isMockProvisioningAllowed()) throw error;
+
+    const reason = error instanceof Error ? error.message : String(error);
+    console.warn(
+      `[esim-access] Live provisioning failed for order ${input.reference} ` +
+        `(package ${input.providerCode}); issuing a simulated profile instead: ${reason}`
+    );
+    return provisionMock(input);
+  }
 }
 
 interface EsimAccessApiResponse {
@@ -156,8 +186,12 @@ async function provisionLive(input: ProvisionEsimInput): Promise<ProvisionedProf
   return { iccid, smdpAddress, activationCode, providerRef, mode: "live" };
 }
 
-/** Local-development simulation of the provider purchase flow. */
-async function provisionMock(input: ProvisionEsimInput): Promise<ProvisionedProfile> {
+/**
+ * Simulated provider purchase flow: structurally valid test profile (ICCID,
+ * SM-DP+ address and `LPA:` activation code that renders as a scannable QR).
+ * `input` is accepted for signature parity with the live path.
+ */
+async function provisionMock(_input: ProvisionEsimInput): Promise<ProvisionedProfile> {
   // Simulate network latency so the UI exercises its loading states.
   await new Promise((resolve) => setTimeout(resolve, 600));
 

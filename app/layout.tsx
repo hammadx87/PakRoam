@@ -13,10 +13,20 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans", display: "swa
 export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
-    default: "PakRoam — eSIM for Pakistan | No PTA Registration Required",
+    default: "PakRoam | Instant eSIM for Pakistan",
     template: "%s · PakRoam",
   },
   description: siteConfig.description,
+  applicationName: "PakRoam",
+  // Branded favicon set (public/) — covers desktop tabs, mobile browsers and
+  // iOS home screens. Regenerate with: node scripts/generate-icons.mjs
+  icons: {
+    icon: [
+      { url: "/favicon.ico", sizes: "any", type: "image/x-icon" },
+      { url: "/icon.png", sizes: "192x192", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   keywords: [
     "eSIM Pakistan",
     "Pakistan eSIM",
